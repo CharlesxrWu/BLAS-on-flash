@@ -30,13 +30,23 @@ int main(int argc, char** argv) {
   std::string A_name = std::string(argv[1]);
   std::string B_name = std::string(argv[2]);
   std::string C_name = std::string(argv[3]);
-  LOG_DEBUG(logger, "map matrices to flash_ptr");
-  flash::flash_ptr<FPTYPE> mat_A =
-      flash::map_file<FPTYPE>(A_name, flash::Mode::READWRITE);
-  flash::flash_ptr<FPTYPE> mat_B =
-      flash::map_file<FPTYPE>(B_name, flash::Mode::READWRITE);
-  flash::flash_ptr<FPTYPE> mat_C =
-      flash::map_file<FPTYPE>(C_name, flash::Mode::READWRITE);
+  
+  float* mat_A = (float*) malloc(m * k * sizeof(float));
+  float* mat_B = (float*) malloc(n * k * sizeof(float));
+  float* mat_C = (float*) malloc(m * n * sizeof(float));
+
+  LOG_INFO(logger, "Reading matrix A into memory");
+  std::ifstream a_file(A_name, std::ios::binary);
+  a_file.read((char*) mat_A, m * k * sizeof(float));
+  a_file.close();
+  LOG_INFO(logger, "Reading matrix B into memory");
+  std::ifstream b_file(B_name, std::ios::binary);
+  b_file.read((char*) mat_B, k * n * sizeof(float));
+  b_file.close();
+  LOG_INFO(logger, "Reading matrix C into memory");
+  std::ifstream c_file(C_name, std::ios::binary);
+  c_file.read((char*) mat_C, m * n * sizeof(float));
+  c_file.close();
 
   // problem dimension
   FBLAS_UINT m = (FBLAS_UINT) std::stol(argv[4]);
@@ -65,11 +75,11 @@ int main(int argc, char** argv) {
 
   LOG_DEBUG(logger, "un-map matrices");
   // unmap files
-  flash::unmap_file(mat_A);
-  flash::unmap_file(mat_B);
-  flash::unmap_file(mat_C);
+  LOG_INFO(logger, "Writing C to file");
+  std::ofstream cout_file(C_name, std::ios::binary);
+  cout_file.write((char*) mat_C, m * n * sizeof(float));
+  cout_file.close();
 
   LOG_DEBUG(logger, "destroying flash context");
-  flash::flash_destroy();
   // destroy blas-on-flash
 }

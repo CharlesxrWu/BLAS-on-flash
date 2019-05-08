@@ -11,7 +11,7 @@
 namespace flash {
   // C = alpha*A*B + beta*C
   class GemmTask : public BaseTask {
-    flash_ptr<FPTYPE>       matA, matB, matC;
+    float*       matA, matB, matC;
     MKL_INT                 a_nrows, a_ncols, b_ncols;
     MKL_INT                 lda_a, lda_b, lda_c;
     FPTYPE                  alpha, beta;
@@ -19,7 +19,7 @@ namespace flash {
     decltype(CblasRowMajor) mat_ord;
 
    public:
-    GemmTask(flash_ptr<FPTYPE> a, flash_ptr<FPTYPE> b, flash_ptr<FPTYPE> c,
+    GemmTask(float* a, float* b, float* c,
              FBLAS_UINT a_nrows, FBLAS_UINT a_ncols, FBLAS_UINT b_ncols,
              FBLAS_UINT ptr_offset[3], FBLAS_UINT lda_a, FBLAS_UINT lda_b,
              FBLAS_UINT lda_c, StrideInfo stride_info[3], FPTYPE alpha,

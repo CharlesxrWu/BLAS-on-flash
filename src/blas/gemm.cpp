@@ -26,7 +26,7 @@ namespace flash {
 
   FBLAS_INT gemm(CHAR mat_ord, CHAR trans_a, CHAR trans_b, FBLAS_UINT m,
                  FBLAS_UINT n, FBLAS_UINT k, FPTYPE alpha, FPTYPE beta,
-                 flash_ptr<FPTYPE> a, flash_ptr<FPTYPE> b, flash_ptr<FPTYPE> c,
+                 float* a, float* b, float* c,
                  FBLAS_UINT lda_a, FBLAS_UINT lda_b, FBLAS_UINT lda_c) {
     GLOG_DEBUG("parameters: mat_ord=", mat_ord, ", trans_a=", trans_a,
                ", trans_b=", trans_b, ", m=", m, ", n=", n, ", k=", k,
